@@ -29,6 +29,7 @@ import Link from "next/link";
 import { use } from "react";
 import { userService } from "@/services/user.service";
 import { authClient } from "@/lib/auth-client";
+import { Spinner } from "../ui/spinner";
 
 interface MenuItem {
   title: string;
@@ -88,8 +89,7 @@ const Navbar = ({
   },
   className,
 }: NavbarProps) => {
-  const { data: session } = authClient.useSession();
-  console.log("Session in Navbar:", session);
+  const { data: session, isPending, error } = authClient.useSession();
 
   return (
     <section className={cn("py-4", className)}>
@@ -111,7 +111,12 @@ const Navbar = ({
               </NavigationMenuList>
             </NavigationMenu>
           </div>
-          {session ? (
+          {isPending ? (
+            <div className="flex gap-2">
+              
+              <Spinner />
+            </div>
+          ) : session ? (
             <div className="flex gap-2">
               <Button asChild variant="outline" size="sm">
                 <Link href="/profile">{session.user.name}</Link>
