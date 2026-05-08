@@ -26,6 +26,9 @@ import {
 } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import { use } from "react";
+import { userService } from "@/services/user.service";
+import { authClient } from "@/lib/auth-client";
 
 interface MenuItem {
   title: string;
@@ -85,6 +88,9 @@ const Navbar = ({
   },
   className,
 }: NavbarProps) => {
+  const { data: session } = authClient.useSession();
+  console.log("Session in Navbar:", session);
+
   return (
     <section className={cn("py-4", className)}>
       <div className="container mx-auto">
@@ -105,14 +111,31 @@ const Navbar = ({
               </NavigationMenuList>
             </NavigationMenu>
           </div>
-          <div className="flex gap-2">
-            <Button asChild variant="outline" size="sm">
-              <Link href={auth.login.url}>{auth.login.title}</Link>
-            </Button>
-            <Button asChild size="sm">
-              <Link href={auth.signup.url}>{auth.signup.title}</Link>
-            </Button>
-          </div>
+          {session ? (
+            <div className="flex gap-2">
+              <Button asChild variant="outline" size="sm">
+                <Link href="/profile">{session.user.name}</Link>
+              </Button>
+              <Button
+                asChild
+                size="sm"
+                onClick={() => {
+                  authClient.signOut();
+                }}
+              >
+                <span>Logout</span>
+              </Button>
+            </div>
+          ) : (
+            <div className="flex gap-2">
+              <Button asChild variant="outline" size="sm">
+                <Link href={auth.login.url}>{auth.login.title}</Link>
+              </Button>
+              <Button asChild size="sm">
+                <Link href={auth.signup.url}>{auth.signup.title}</Link>
+              </Button>
+            </div>
+          )}
         </nav>
 
         {/* Mobile Menu */}
