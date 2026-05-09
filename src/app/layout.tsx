@@ -1,14 +1,15 @@
 import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 import "./globals.css";
- 
+
 const geist = Geist({
-  subsets: ['latin'],
-})
+  subsets: ["latin"],
+});
 
 export const metadata: Metadata = {
   title: "LabLog - a simple equipment booking system",
-  description: "LabLog is a simple equipment booking system built with Next.js, Prisma, and PostgreSQL. It allows users to easily book and manage equipment reservations.",
+  description:
+    "LabLog is a simple equipment booking system built with Next.js, Prisma, and PostgreSQL. It allows users to easily book and manage equipment reservations.",
 };
 
 export default function RootLayout({
