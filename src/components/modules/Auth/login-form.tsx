@@ -1,84 +1,160 @@
-"use client"
-
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
+"use client";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+} from "@/components/ui/card";
 import {
   Field,
   FieldDescription,
+  FieldError,
   FieldGroup,
   FieldLabel,
-} from "@/components/ui/field"
-import { Input } from "@/components/ui/input"
-import Link from "next/link"
-import { authClient } from "@/lib/auth-client"
+} from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import { authClient } from "@/lib/auth-client";
+import { useForm } from "@tanstack/react-form";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
-export function LoginForm({
-  className,
-  ...props
-}: React.ComponentProps<"div">) {
+import { toast } from "sonner";
+import * as z from "zod";
 
+export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
+  const router = useRouter();
+  const formSchema = z
+    .object({
+      email: z.email("Invalid email address"),
+      password: z.string().min(8, "Password must be at least 8 characters"),
+    })
+  const form = useForm({
+    defaultValues: {
+     
+      email: "",
+      password: "",
+    
+    },
+    validators: {
+      onSubmit: formSchema,
+    },
+    onSubmit: async ({ value }) => {
+      const toastId = toast.loading("Signing in...");
 
-  const signIn = async () => {
-  const data = await authClient.signIn.social({
-    provider: "google",
-    callbackURL: "http://localhost:3000",
+      try {
+        const { data, error } = await authClient.signIn.email({
+          email: value.email,
+          password: value.password,
+        });
+
+        if (error) {
+          toast.error(error.message, {
+            id: toastId,
+          });
+        }
+
+        if (data) {
+          toast.success("Signed in successfully", {
+            id: toastId,
+          });
+          router.push("/");
+        }
+      } catch (error) {
+        toast.error("An unexpected error occurred", {
+          id: toastId,
+        });
+      }
+    },
   });
-};
 
+    const continueWithGoogle = async () => {
+    const data = await authClient.signIn.social({
+      provider: "google",
+      callbackURL: "http://localhost:3000",
+    });
+  };
 
   return (
-    <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <Card>
-        <CardHeader>
-          <CardTitle>Login to your account</CardTitle>
-          <CardDescription>
-            Enter your email below to login to your account
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form >
-            <FieldGroup>
-              <Field>
-                <FieldLabel htmlFor="email">Email</FieldLabel>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="m@example.com"
-                  required
-                />
-              </Field>
-              <Field>
-                <div className="flex items-center">
-                  <FieldLabel htmlFor="password">Password</FieldLabel>
-                  <Link
-                    href="/forgot-password"
-                    className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
-                  >
-                    Forgot your password?
-                  </Link>
-                </div>
-                <Input id="password" type="password" required />
-              </Field>
-              <Field>
-                <Button type="submit">Login</Button>
-                <Button onClick={() => signIn()} variant="outline" type="button">
-                  Login with Google
-                </Button>
-                <FieldDescription className="text-center">
-                  Don&apos;t have an account? <Link href="/register">Sign up</Link>
-                </FieldDescription>
-              </Field>
-            </FieldGroup>
-          </form>
-        </CardContent>
-      </Card>
-    </div>
-  )
+    <Card {...props}>
+      <CardHeader>
+        <CardTitle>Sign in to your account</CardTitle>
+        <CardDescription>
+          Enter your information below to sign in to your account.
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <form
+          id="login-form"
+          onSubmit={(e) => {
+            e.preventDefault();
+            form.handleSubmit();
+          }}
+        >
+          <FieldGroup>
+            <form.Field
+              name="email"
+              children={(field) => {
+                const isInvalid =
+                  field.state.meta.isTouched && !field.state.meta.isValid;
+                return (
+                  <Field>
+                    <FieldLabel htmlFor="email">Email</FieldLabel>
+                    <Input
+                      id="email"
+                      name="email"
+                      type="email"
+                      value={field.state.value}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      placeholder="john@example.com"
+                    />
+                    {isInvalid && (
+                      <FieldError errors={field.state.meta.errors} />
+                    )}
+                  </Field>
+                );
+              }}
+            />
+            <form.Field
+              name="password"
+              children={(field) => {
+                const isInvalid =
+                  field.state.meta.isTouched && !field.state.meta.isValid;
+                return (
+                  <Field>
+                    <FieldLabel htmlFor="password">Password</FieldLabel>
+                    <Input
+                      id="password"
+                      name="password"
+                      type="password"
+                      value={field.state.value}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      placeholder="••••••••"
+                    />
+                    {isInvalid && (
+                      <FieldError errors={field.state.meta.errors} />
+                    )}
+                  </Field>
+                );
+              }}
+            />
+          </FieldGroup>
+        </form>
+      </CardContent>
+      <CardFooter className="flex flex-col items-center gap-2">
+        <Button form="login-form" type="submit" className="w-full">
+          Sign In
+        </Button>
+        <p>or</p>
+        <Button onClick={() => continueWithGoogle()} variant="outline" type="button" className="w-full">
+          Continue with Google
+        </Button>
+        <FieldDescription className="text-center">
+          Don&apos;t have an account? <Link href="/register" className="underline">Register</Link>
+        </FieldDescription>
+      </CardFooter>
+    </Card>
+  );
 }
