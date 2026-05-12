@@ -17,7 +17,9 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { authClient } from "@/lib/auth-client";
+import { userService } from "@/services/user.service";
 import { useForm } from "@tanstack/react-form";
+import { console } from "inspector/promises";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -25,7 +27,12 @@ import { toast } from "sonner";
 import * as z from "zod";
 
 export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
+
+
   const router = useRouter();
+
+
+
   const formSchema = z
     .object({
       email: z.email("Invalid email address"),
@@ -76,6 +83,8 @@ export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
       callbackURL: "http://localhost:3000",
     });
   };
+
+
 
   return (
     <Card {...props}>
