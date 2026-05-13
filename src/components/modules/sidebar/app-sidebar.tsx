@@ -3,7 +3,6 @@ import {
   SidebarContent,
   SidebarFooter,
   SidebarGroup,
-  SidebarGroupAction,
   SidebarGroupContent,
   SidebarGroupLabel,
   SidebarHeader,
@@ -11,12 +10,14 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+
 import {
   BarChart3,
   CalendarCheck,
-  ClipboardList,
   History,
   LayoutDashboard,
+  LogOut,
+  Logs,
   Package,
   Plus,
   Settings,
@@ -25,15 +26,35 @@ import {
   Wrench,
 } from "lucide-react";
 
-export function AppSidebar() {
+type Role = "ADMIN" | "USER";
+
+export function AppSidebar({ roles }: { roles: Role }) {
+  const adminItems = [
+    { label: "Dashboard", icon: LayoutDashboard },
+    { label: "Users", icon: Users },
+    { label: "Reports", icon: BarChart3 },
+  ];
+
+  const userItems = [
+    { label: "Dashboard", icon: LayoutDashboard },
+    { label: "My Bookings", icon: CalendarCheck },
+    { label: "History", icon: History },
+  ];
+
+  const settingsItems = [
+    { label: "System Settings", icon: Settings },
+  ];
+
+  const items = roles === "ADMIN" ? adminItems : userItems;
+
   return (
     <Sidebar>
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton>
-              <ClipboardList className="mr-2" />
-              LabLog
+              <Logs className="mr-2" />
+             LabLog
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
@@ -41,75 +62,97 @@ export function AppSidebar() {
 
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Lab Management</SidebarGroupLabel>
-          <SidebarGroupAction>
-            <Plus /> <span className="sr-only">Add Equipment</span>
-          </SidebarGroupAction>
+          <SidebarGroupLabel>Menu</SidebarGroupLabel>
 
           <SidebarGroupContent>
             <SidebarMenu>
-              <SidebarMenuItem>
-                <SidebarMenuButton>
-                  <LayoutDashboard className="mr-2" />
-                  Dashboard
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-
-              <SidebarMenuItem>
-                <SidebarMenuButton>
-                  <Package className="mr-2" />
-                  Equipment
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-
-              <SidebarMenuItem>
-                <SidebarMenuButton>
-                  <CalendarCheck className="mr-2" />
-                  Bookings
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-
-              <SidebarMenuItem>
-                <SidebarMenuButton>
-                  <History className="mr-2" />
-                  Booking History
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-
-              <SidebarMenuItem>
-                <SidebarMenuButton>
-                  <Users className="mr-2" />
-                  Users
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-
-              <SidebarMenuItem>
-                <SidebarMenuButton>
-                  <Wrench className="mr-2" />
-                  Maintenance
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-
-              <SidebarMenuItem>
-                <SidebarMenuButton>
-                  <BarChart3 className="mr-2" />
-                  Reports
-                </SidebarMenuButton>
-              </SidebarMenuItem>
+              {items.map((item) => (
+                <SidebarMenuItem key={item.label}>
+                  <SidebarMenuButton>
+                    <item.icon className="mr-2" />
+                    {item.label}
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
 
+        {/* ADMIN ONLY SECTION */}
+        {roles === "ADMIN" && (
+          <SidebarGroup>
+            <SidebarGroupLabel>Admin Tools</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                <SidebarMenuItem>
+                  <SidebarMenuButton>
+                    <Wrench className="mr-2" />
+                    Maintenance
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+
+                <SidebarMenuItem>
+                  <SidebarMenuButton>
+                    <Package className="mr-2" />
+                    Equipment Control
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+
+                <SidebarMenuItem>
+                  <SidebarMenuButton>
+                    <Plus className="mr-2" />
+                    Add Equipment
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        )}
+
+        {/* USER ONLY SECTION */}
+        {roles === "USER" && (
+          <SidebarGroup>
+            <SidebarGroupLabel>User Tools</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                <SidebarMenuItem>
+                  <SidebarMenuButton>
+                    <CalendarCheck className="mr-2" />
+                    Book Lab
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+
+                <SidebarMenuItem>
+                  <SidebarMenuButton>
+                    <History className="mr-2" />
+                    My History
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+
+                <SidebarMenuItem>
+                  <SidebarMenuButton>
+                    <User2 className="mr-2" />
+                    Profile
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        )}
+
+        {/* COMMON SETTINGS */}
         <SidebarGroup>
           <SidebarGroupLabel>Settings</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              <SidebarMenuItem>
-                <SidebarMenuButton>
-                  <Settings className="mr-2" />
-                  System Settings
-                </SidebarMenuButton>
-              </SidebarMenuItem>
+              {settingsItems.map((item) => (
+                <SidebarMenuItem key={item.label}>
+                  <SidebarMenuButton>
+                    <item.icon className="mr-2" />
+                    {item.label}
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
@@ -119,8 +162,8 @@ export function AppSidebar() {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton>
-              <User2 className="mr-2" />
-              Admin Panel
+              <LogOut className="mr-2" />
+              Logout
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
