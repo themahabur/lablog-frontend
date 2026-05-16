@@ -16,34 +16,31 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { env } from "@/env";
 import { authClient } from "@/lib/auth-client";
 import { userService } from "@/services/user.service";
 import { useForm } from "@tanstack/react-form";
 import { console } from "inspector/promises";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 import { toast } from "sonner";
 import * as z from "zod";
 
 export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
-
-
   const router = useRouter();
+  const searchParams = useSearchParams();
 
+  const redirectPath = searchParams.get("redirect") || "/";
 
-
-  const formSchema = z
-    .object({
-      email: z.email("Invalid email address"),
-      password: z.string().min(8, "Password must be at least 8 characters"),
-    })
+  const formSchema = z.object({
+    email: z.email("Invalid email address"),
+    password: z.string().min(8, "Password must be at least 8 characters"),
+  });
   const form = useForm({
     defaultValues: {
-     
       email: "",
       password: "",
-    
     },
     validators: {
       onSubmit: formSchema,
@@ -67,7 +64,7 @@ export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
           toast.success("Signed in successfully", {
             id: toastId,
           });
-          router.push("/");
+          router.push(redirectPath);
         }
       } catch (error) {
         toast.error("An unexpected error occurred", {
@@ -77,14 +74,12 @@ export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
     },
   });
 
-    const continueWithGoogle = async () => {
+  const continueWithGoogle = async () => {
     const data = await authClient.signIn.social({
       provider: "google",
-      callbackURL: "http://localhost:3000",
+      callbackURL: env.NEXT_PUBLIC_FRONTEND_API + redirectPath,
     });
   };
-
-
 
   return (
     <Card {...props}>
@@ -157,11 +152,19 @@ export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
           Sign In
         </Button>
         <p>or</p>
-        <Button onClick={() => continueWithGoogle()} variant="outline" type="button" className="w-full">
+        <Button
+          onClick={() => continueWithGoogle()}
+          variant="outline"
+          type="button"
+          className="w-full"
+        >
           Continue with Google
         </Button>
         <FieldDescription className="text-center">
-          Don&apos;t have an account? <Link href="/register" className="underline">Register</Link>
+          Don&apos;t have an account?{" "}
+          <Link href="/register" className="underline">
+            Register
+          </Link>
         </FieldDescription>
       </CardFooter>
     </Card>

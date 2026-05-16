@@ -71,10 +71,6 @@ const Navbar = ({
   menu = [
     { title: "Home", url: "/" },
     {
-      title: "Profile",
-      url: "/profile",
-    },
-    {
       title: "Equipment",
       url: "/equipment",
     },
