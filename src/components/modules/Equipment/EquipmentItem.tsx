@@ -26,7 +26,7 @@ export default function EquipmentItem({
   // };
 
   return (
-    <Card className="rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300">
+    <Card className="rounded-xl hover:shadow-sm  transition-all duration-300">
       <CardHeader className="flex flex-row justify-between items-start">
         <div>
           <CardTitle className="text-lg">{equipment.name}</CardTitle>
@@ -66,7 +66,7 @@ export default function EquipmentItem({
 
         {/* Booking Button */}
         <Button
-          className="w-full rounded-xl mt-2"
+          className="w-full rounded-xl mt-2 cursor-pointer"
           disabled={equipment.status !== "AVAILABLE"}
           // onClick={handleBook}
         >
