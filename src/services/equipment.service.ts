@@ -1,14 +1,27 @@
 import { env } from "@/env";
-import { cookies } from "next/headers";
 
-const getEquipments = async () => {
-  const res = await fetch(`${env.NEXT_PUBLIC_BACKEND_API}/api/v1/equipment/`,{
-    next:{
-      revalidate:10
-    }
-  });
+interface SearchParams {
+  isAvailable?: boolean;
+  search?: string;
+}
+
+const getEquipments = async (searchParams: SearchParams) => {
+  const url = new URL(`${env.NEXT_PUBLIC_BACKEND_API}/api/v1/equipment/`);
+
+  // console.log("searchParams:", searchParams);
+
+
+if (searchParams.isAvailable !== undefined) {
+    url.searchParams.append("is_available", searchParams.isAvailable.toString());
+  }
+
+  if (searchParams.search !== undefined && searchParams.search !== "") {
+    url.searchParams.append("search", searchParams.search);
+  }
+  console.log("url:", url.toString());
+  const res = await fetch(url.toString(), { cache: "no-store" });
+
   const equipmentData = await res.json();
-  console.log("equipmentData:", equipmentData);
   return equipmentData;
 };
 

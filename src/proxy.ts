@@ -13,7 +13,6 @@ export async function proxy(request: NextRequest) {
 
   const { data: userData } = await userService.getSession();
 
-  console.log("User Data:", userData);
 
   // If user not logged in
   if (!userData) {

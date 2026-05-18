@@ -5,9 +5,14 @@ import { Plus, Search, PackageSearch } from "lucide-react";
 import { equipmentService } from "@/services/equipment.service";
 import { Equipment } from "@/types/equipment";
 
+const searchParams = {
+  isAvailable: true,
+  search: "",
+};
+
 const EquipmentPage = async () => {
   const { data: equipmentData, success } =
-    await equipmentService.getEquipments();
+    await equipmentService.getEquipments(searchParams);
 
   return (
     <div className="p-6 space-y-8">
