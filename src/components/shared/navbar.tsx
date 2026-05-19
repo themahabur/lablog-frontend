@@ -1,4 +1,3 @@
-"use client";
 
 import { Book, Menu, Sunset, Trees, Zap } from "lucide-react";
 
@@ -30,6 +29,7 @@ import { use } from "react";
 import { userService } from "@/services/user.service";
 import { authClient } from "@/lib/auth-client";
 import { Spinner } from "../ui/spinner";
+import LogoutBtn from "../modules/Auth/LogoutBtn";
 
 interface MenuItem {
   title: string;
@@ -61,7 +61,7 @@ interface NavbarProps {
   };
 }
 
-const Navbar = ({
+const Navbar = async ({
   logo = {
     url: "/",
     src: "https://deifkwefumgah.cloudfront.net/shadcnblocks/block/logos/shadcnblockscom-icon.svg",
@@ -85,7 +85,7 @@ const Navbar = ({
   },
   className,
 }: NavbarProps) => {
-  const { data: session, isPending, error } = authClient.useSession();
+  const { data: session } = await userService.getSession();
 
   return (
     <section className={cn("py-4", className)}>
@@ -107,25 +107,12 @@ const Navbar = ({
               </NavigationMenuList>
             </NavigationMenu>
           </div>
-          {isPending ? (
-            <div className="flex gap-2">
-              
-              <Spinner />
-            </div>
-          ) : session ? (
+          {session ? (
             <div className="flex gap-2">
               <Button asChild variant="outline" size="sm">
                 <Link href="/profile">{session.user.name}</Link>
               </Button>
-              <Button
-                asChild
-                size="sm"
-                onClick={() => {
-                  authClient.signOut();
-                }}
-              >
-                <span>Logout</span>
-              </Button>
+              <LogoutBtn/>
             </div>
           ) : (
             <div className="flex gap-2">
@@ -143,13 +130,13 @@ const Navbar = ({
         <div className="block lg:hidden">
           <div className="flex items-center justify-between">
             {/* Logo */}
-            <a href={logo.url} className="flex items-center gap-2">
+            <Link href={logo.url} className="flex items-center gap-2">
               <img
                 src={logo.src}
                 className="max-h-8 dark:invert"
                 alt={logo.alt}
               />
-            </a>
+            </Link>
             <Sheet>
               <SheetTrigger asChild>
                 <Button variant="outline" size="icon">
@@ -159,13 +146,13 @@ const Navbar = ({
               <SheetContent className="overflow-y-auto">
                 <SheetHeader>
                   <SheetTitle>
-                    <a href={logo.url} className="flex items-center gap-2">
+                    <Link href={logo.url} className="flex items-center gap-2">
                       <img
                         src={logo.src}
                         className="max-h-8 dark:invert"
                         alt={logo.alt}
                       />
-                    </a>
+                    </Link>
                   </SheetTitle>
                 </SheetHeader>
                 <div className="flex flex-col gap-6 p-4">
@@ -179,10 +166,10 @@ const Navbar = ({
 
                   <div className="flex flex-col gap-3">
                     <Button asChild variant="outline">
-                      <a href={auth.login.url}>{auth.login.title}</a>
+                      <Link href={auth.login.url}>{auth.login.title}</Link>
                     </Button>
                     <Button asChild>
-                      <a href={auth.signup.url}>{auth.signup.title}</a>
+                      <Link href={auth.signup.url}>{auth.signup.title}</Link>
                     </Button>
                   </div>
                 </div>

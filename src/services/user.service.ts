@@ -16,6 +16,8 @@ const getSession = async () => {
 
     const session = await res.json();
 
+    console.log("Session from userService:", session);
+
     if (session === null) {
       return { data: null, error: { message: "Session is missing." } };
     }

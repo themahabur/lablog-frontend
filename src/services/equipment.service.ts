@@ -1,18 +1,18 @@
 import { env } from "@/env";
+import { EquipmentStatus } from "@/types/equipment";
 
 interface SearchParams {
-  isAvailable?: boolean;
+  status?: EquipmentStatus;
   search?: string;
 }
+
+
 
 const getEquipments = async (searchParams: SearchParams) => {
   const url = new URL(`${env.NEXT_PUBLIC_BACKEND_API}/api/v1/equipment/`);
 
-  // console.log("searchParams:", searchParams);
-
-
-if (searchParams.isAvailable !== undefined) {
-    url.searchParams.append("is_available", searchParams.isAvailable.toString());
+  if (searchParams.status !== undefined) {
+    url.searchParams.append("status", searchParams.status);
   }
 
   if (searchParams.search !== undefined && searchParams.search !== "") {

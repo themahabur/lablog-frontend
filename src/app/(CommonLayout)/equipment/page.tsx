@@ -3,14 +3,15 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Plus, Search, PackageSearch } from "lucide-react";
 import { equipmentService } from "@/services/equipment.service";
-import { Equipment } from "@/types/equipment";
+import { Equipment, EquipmentStatus } from "@/types/equipment";
 import { EquipmentFilterBtn } from "@/components/modules/Equipment/EquipmentFilterBtn";
+import EquipmentSearch from "@/components/modules/Equipment/EquipmentSearch";
 
 
 const EquipmentPage = async ({
   searchParams,
 }: {
-  searchParams: { isAvailable?: boolean; search?: string };
+  searchParams: { status?:EquipmentStatus; search?: string };
 }) => {
   const params = await searchParams;
 
@@ -34,13 +35,7 @@ const EquipmentPage = async ({
             <EquipmentFilterBtn />
           </div>
           {/* Search */}
-          <div className="relative max-w-lg">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <Input
-              placeholder="Search equipment"
-              className="pl-11 h-12 rounded-2xl"
-            />
-          </div>
+          <EquipmentSearch />
         </div>
       </div>
 

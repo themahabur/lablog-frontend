@@ -2,9 +2,17 @@ export type Equipment = {
   id: string;
   name: string;
   serialNumber: string;
-  status: "AVAILABLE" | "IN_USE" | "MAINTENANCE";
+  status: EquipmentStatus;
   location: string;
   metadata: Record<string, string>;
   createdAt: Date;
   updatedAt: Date;
 };
+
+
+
+export enum EquipmentStatus {
+  AVAILABLE = "AVAILABLE",
+  IN_USE = "IN_USE",
+  MAINTENANCE = "MAINTENANCE",
+}

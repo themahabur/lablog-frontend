@@ -9,29 +9,31 @@ export const EquipmentFilterBtn = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const isAvailable = searchParams.get("isAvailable") || "all";
+  const status = searchParams.get("status") || "all";
 
   const updateFilter = (value: string) => {
     const params = new URLSearchParams(searchParams.toString());
 
     if (value === "all") {
-      params.delete("isAvailable");
+      params.delete("status");
     } else {
-      params.set("isAvailable", value);
+      params.set("status", value);
     }
 
     router.push(`?${params.toString()}`);
   };
 
   return (
-    <Select value={isAvailable} onValueChange={updateFilter}>
+    <Select value={status} onValueChange={updateFilter}>
       <SelectTrigger className="w-[180px]">
         <SelectValue placeholder="Filter Equipment" />
       </SelectTrigger>
 
       <SelectContent>
         <SelectItem value="all">All Equipment</SelectItem>
-        <SelectItem value="true">Available Only</SelectItem>
+        <SelectItem value="AVAILABLE">Available</SelectItem>
+        <SelectItem value="IN_USE">In Use</SelectItem>
+        <SelectItem value="MAINTENANCE">Maintenance</SelectItem>
       </SelectContent>
     </Select>
   );
