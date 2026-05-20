@@ -1,13 +1,9 @@
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { MapPin, Cpu, CalendarPlus } from "lucide-react";
 import { Equipment } from "@/types/equipment";
+import Link from "next/link";
 
 const statusVariant = {
   AVAILABLE: "default",
@@ -15,11 +11,7 @@ const statusVariant = {
   MAINTENANCE: "destructive",
 } as const;
 
-export default function EquipmentItem({
-  equipment,
-}: {
-  equipment: Equipment;
-}) {
+export default function EquipmentItem({ equipment }: { equipment: Equipment }) {
   // const handleBook = () => {
   //   console.log("Booking equipment:", equipment.id);
   //   // later: open modal / call API
@@ -64,17 +56,29 @@ export default function EquipmentItem({
           </div>
         )}
 
-        {/* Booking Button */}
-        <Button
-          className="w-full rounded-xl mt-2 cursor-pointer"
-          disabled={equipment.status !== "AVAILABLE"}
-          // onClick={handleBook}
+        <Link
+          href={
+            equipment.status === "AVAILABLE"
+              ? `/equipment/${equipment.id}`
+              : "#"
+          }
+          className={`w-full ${equipment.status === "AVAILABLE" ? "cursor-pointer" : "cursor-not-allowed"}`}
+          // onClick={(e) => {
+          //   if (equipment.status !== "AVAILABLE") {
+          //     e.preventDefault();
+          //   }
+          // }}
         >
-          <CalendarPlus className="w-4 h-4 mr-2" />
-          {equipment.status === "AVAILABLE"
-            ? "Book Equipment"
-            : "Not Available"}
-        </Button>
+          <Button
+            className="w-full rounded-xl mt-2 cursor-pointer"
+            disabled={equipment.status !== "AVAILABLE"}
+          >
+            <CalendarPlus className="w-4 h-4 mr-2" />
+            {equipment.status === "AVAILABLE"
+              ? "Book Equipment"
+              : "Not Available"}
+          </Button>
+        </Link>
       </CardContent>
     </Card>
   );
