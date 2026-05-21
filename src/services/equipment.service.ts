@@ -7,14 +7,14 @@ interface SearchParams {
   search?: string;
 }
 
-const getEquipments = async (searchParams: SearchParams) => {
+const getEquipments = async (searchParams?: SearchParams) => {
   const url = new URL(`${env.NEXT_PUBLIC_BACKEND_API}/api/v1/equipment/`);
 
-  if (searchParams.status !== undefined) {
+  if (searchParams?.status !== undefined) {
     url.searchParams.append("status", searchParams.status);
   }
 
-  if (searchParams.search !== undefined && searchParams.search !== "") {
+  if (searchParams?.search !== undefined && searchParams.search !== "") {
     url.searchParams.append("search", searchParams.search);
   }
   console.log("url:", url.toString());
@@ -26,13 +26,8 @@ const getEquipments = async (searchParams: SearchParams) => {
 
 const getEquipmentById = async (id: string) => {
   try {
-    const cookieStore = await cookies();
 
-    const res = await fetch(`${env.NEXT_PUBLIC_BACKEND_API}/api/v1/equipment/${id}`, {
-      headers: {
-        Cookie: cookieStore.toString(),
-      }
-    });
+    const res = await fetch(`${env.NEXT_PUBLIC_BACKEND_API}/api/v1/equipment/${id}`);
 
     const equipmentData = await res.json();
     return equipmentData;

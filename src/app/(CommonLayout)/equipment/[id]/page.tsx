@@ -1,4 +1,5 @@
 import { equipmentService } from "@/services/equipment.service";
+import { Equipment } from "@/types/equipment";
 import { notFound } from "next/navigation";
 
 type UsageLog = {
@@ -15,6 +16,13 @@ type UsageLog = {
     email: string;
   };
 };
+
+
+export async function generateStaticParams(){
+  const {data:equipments}=await equipmentService.getEquipments()
+
+  return equipments?.map((equipment: Equipment) => ({ id: equipment.id })).splice(0, 3);
+}
 
 
 export default async function EquipmentDetailsPage({
