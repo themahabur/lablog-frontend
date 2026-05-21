@@ -1,6 +1,5 @@
 import { env } from "@/env";
 import { EquipmentStatus } from "@/types/equipment";
-import { cookies } from "next/headers";
 
 interface SearchParams {
   status?: EquipmentStatus;
@@ -17,8 +16,8 @@ const getEquipments = async (searchParams?: SearchParams) => {
   if (searchParams?.search !== undefined && searchParams.search !== "") {
     url.searchParams.append("search", searchParams.search);
   }
-  console.log("url:", url.toString());
-  const res = await fetch(url.toString(), { cache: "no-store" });
+
+  const res = await fetch(url.toString(),{ cache: "no-store" });
 
   const equipmentData = await res.json();
   return equipmentData;
@@ -30,6 +29,7 @@ const getEquipmentById = async (id: string) => {
     const res = await fetch(`${env.NEXT_PUBLIC_BACKEND_API}/api/v1/equipment/${id}`);
 
     const equipmentData = await res.json();
+    
     return equipmentData;
   } catch (error) {
     console.error("Error fetching equipment by ID:", error);

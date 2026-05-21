@@ -18,11 +18,14 @@ type UsageLog = {
 };
 
 
-export async function generateStaticParams(){
-  const {data:equipments}=await equipmentService.getEquipments()
+export async function generateStaticParams() {
+  const { data: equipments } = await equipmentService.getEquipments();
 
-  return equipments?.map((equipment: Equipment) => ({ id: equipment.id })).splice(0, 3);
+  return equipments.map((equipment: Equipment) => ({
+    id: equipment.id,
+  })).splice(0, 4);
 }
+
 
 
 export default async function EquipmentDetailsPage({
@@ -33,8 +36,6 @@ export default async function EquipmentDetailsPage({
   const { id } = await params;
 
   const {data :equipment} = await equipmentService.getEquipmentById(id);
-
-  console.log("Fetched equipment:", equipment);
 
   if (!equipment) {
     return notFound();

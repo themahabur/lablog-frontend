@@ -1,4 +1,4 @@
-
+"use client";
 import { Book, Menu, Sunset, Trees, Zap } from "lucide-react";
 
 import {
@@ -61,7 +61,7 @@ interface NavbarProps {
   };
 }
 
-const Navbar = async ({
+const Navbar =  ({
   logo = {
     url: "/",
     src: "https://deifkwefumgah.cloudfront.net/shadcnblocks/block/logos/shadcnblockscom-icon.svg",
@@ -85,7 +85,9 @@ const Navbar = async ({
   },
   className,
 }: NavbarProps) => {
-  const { data: session } = await userService.getSession();
+  const  {data : session,isPending}  = authClient.useSession();
+
+  console.log("Session in Navbar:", session);
 
   return (
     <section className={cn("py-4", className)}>
