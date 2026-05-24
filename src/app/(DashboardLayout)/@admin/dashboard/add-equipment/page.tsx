@@ -36,8 +36,8 @@ const CreateEquipmentPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
-      <div className="mx-auto rounded-2xl bg-white p-8 shadow-lg">
+    <div className="min-h-screen w-full bg-gray-100 p-6">
+      <div className="mx-auto w-full max-w-md  rounded-2xl bg-white p-8 ">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-800">
             Create Equipment

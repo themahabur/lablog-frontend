@@ -25,24 +25,25 @@ import {
   Users,
   Wrench,
 } from "lucide-react";
+import Link from "next/link";
 
 type Role = "ADMIN" | "USER";
 
 export function AppSidebar({ roles }: { roles: Role }) {
   const adminItems = [
-    { label: "Dashboard", icon: LayoutDashboard },
-    { label: "Users", icon: Users },
-    { label: "Reports", icon: BarChart3 },
+    { label: "Dashboard", icon: LayoutDashboard, href: "/admin" },
+    { label: "Users", icon: Users, href: "/admin/users" },
+    { label: "Reports", icon: BarChart3, href: "/admin/reports" },
   ];
 
   const userItems = [
-    { label: "Dashboard", icon: LayoutDashboard },
-    { label: "My Bookings", icon: CalendarCheck },
-    { label: "History", icon: History },
+    { label: "Dashboard", icon: LayoutDashboard, href: "/dashboard" },
+    { label: "My Bookings", icon: CalendarCheck, href: "/bookings" },
+    { label: "History", icon: History, href: "/history" },
   ];
 
   const settingsItems = [
-    { label: "System Settings", icon: Settings },
+    { label: "System Settings", icon: Settings, href: "/settings" },
   ];
 
   const items = roles === "ADMIN" ? adminItems : userItems;
@@ -54,7 +55,7 @@ export function AppSidebar({ roles }: { roles: Role }) {
           <SidebarMenuItem>
             <SidebarMenuButton>
               <Logs className="mr-2" />
-             LabLog
+              LabLog
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
@@ -68,9 +69,11 @@ export function AppSidebar({ roles }: { roles: Role }) {
             <SidebarMenu>
               {items.map((item) => (
                 <SidebarMenuItem key={item.label}>
-                  <SidebarMenuButton>
-                    <item.icon className="mr-2" />
-                    {item.label}
+                  <SidebarMenuButton asChild>
+                    <Link href={item.href}>
+                      <item.icon className="mr-2" />
+                      {item.label}
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
@@ -99,9 +102,11 @@ export function AppSidebar({ roles }: { roles: Role }) {
                 </SidebarMenuItem>
 
                 <SidebarMenuItem>
-                  <SidebarMenuButton>
-                    <Plus className="mr-2" />
-                    Add Equipment
+                  <SidebarMenuButton asChild>
+                    <Link href="/dashboard/add-equipment">
+                      <Plus className="mr-2" />
+                      Add Equipment
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               </SidebarMenu>
