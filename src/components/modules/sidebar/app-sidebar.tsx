@@ -31,9 +31,9 @@ type Role = "ADMIN" | "USER";
 
 export function AppSidebar({ roles }: { roles: Role }) {
   const adminItems = [
-    { label: "Dashboard", icon: LayoutDashboard, href: "/admin" },
-    { label: "Users", icon: Users, href: "/admin/users" },
-    { label: "Reports", icon: BarChart3, href: "/admin/reports" },
+    { label: "Dashboard", icon: LayoutDashboard, href: "/dashboard" },
+    { label: "Users", icon: Users, href: "/dashboard/users" },
+    { label: "Reports", icon: BarChart3, href: "/dashboard/reports" },
   ];
 
   const userItems = [
@@ -103,9 +103,9 @@ export function AppSidebar({ roles }: { roles: Role }) {
 
                 <SidebarMenuItem>
                   <SidebarMenuButton asChild>
-                    <Link href="/dashboard/add-equipment">
-                      <Plus className="mr-2" />
-                      Add Equipment
+                    <Link href="/dashboard/equipment">
+                      <Package className="mr-2" />
+                      Equipment
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>

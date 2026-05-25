@@ -5,7 +5,6 @@ import { redirect } from "next/navigation";
 import React from "react";
 export const dynamic = "force-dynamic";
 
-
 const dashboardLayout = async ({
   admin,
   user,
@@ -21,11 +20,15 @@ const dashboardLayout = async ({
 
   return (
     <SidebarProvider>
-      <AppSidebar roles={roles} />
-      <main>
-        <SidebarTrigger />
-        {(roles as string) === "ADMIN" ? admin : user}
-      </main>
+      <div className="flex min-h-screen w-full">
+        <AppSidebar roles={roles} />
+
+        <main className="flex-1 p-4">
+          <SidebarTrigger />
+
+          {roles === "ADMIN" ? admin : user}
+        </main>
+      </div>
     </SidebarProvider>
   );
 };
